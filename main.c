@@ -9,26 +9,48 @@ void init_shell(void)
 	printf("#cisfun$ ");
 }
 
+void execprogram(char **commangarg,char **environ)
+{
+
+	if(execve(commangarg[0], commangarg, environ) == -1)
+		printf("%s: No such file or directory\n",commangarg[0]);
+	
+}
+
 /**
  * main - start of the program
  * Return: int
  */
-int main(void)
+int main(int argc, char *argv[])
 {
-	char *args[2];
+	char *commangarg[10];
+	pid_t pid;
 	char *command = malloc(sizeof(char) * 100);
-	extern char **environ;
+	char *environ[10] = { NULL };
 	init_shell();
-	while (1)
+	if(argc == 1)
 	{
-		scanf("%s", command);
-		args[0] = command;
-		if (execve(args[0], args, environ) == -1)
-			printf("%s: No such file or directory\n",arg);
-		else
-			printf(" ");
-
-		init_shell();
+		while (1)
+		{
+			pid = fork();
+			if(pid)
+				scanf("%s", command);
+			commangarg[0] = command;
+			commangarg[1] = NULL;
+			
+			printf("%d",pid);
+			execprogram(commangarg,environ);
+			init_shell();
+		}
+	}
+	else
+	{
+		printf("%s",argv[0]);
+		commangarg[0] = argv[1];
+		commangarg[1] = "-l";
+		commangarg[2]=".";
+		if (execve(commangarg[0], commangarg, environ) == -1)
+				printf("%s: No such file or directory\n",commangarg[0]);
 	}
 	return (0);
 }
