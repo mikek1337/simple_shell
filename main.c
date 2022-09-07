@@ -8,49 +8,52 @@ void init_shell(void)
 {
 	printf("#cisfun$ ");
 }
+/**
+ * execprogram - execute programs given path
+ * @commandarg: command to run with args
+ * @environ: enviromental path
+ */
 
-void execprogram(char **commangarg,char **environ)
+void execprogram(char **commandarg, char **environ)
 {
 
-	if(execve(commangarg[0], commangarg, environ) == -1)
-		printf("%s: No such file or directory\n",commangarg[0]);
-	
+	if (execve(commandarg[0], commandarg, environ) == -1)
+		printf("%s: No such file or directory\n", commangarg[0]);
 }
 
 /**
  * main - start of the program
+ * @argc: count arguments
+ * @argv: arguments
  * Return: int
  */
 int main(int argc, char *argv[])
 {
-	char *commangarg[10];
-	pid_t pid;
-	char *command = malloc(sizeof(char) * 100);
-	char *environ[10] = { NULL };
+	 char *commangarg[10];
+	 pid_t pid;
+	 char *command = malloc(sizeof(char) * 100);
+	 char *environ[10] = { NULL };
 	init_shell();
-	if(argc == 1)
+	if (argc == 1)
 	{
 		while (1)
 		{
 			pid = fork();
-			if(pid)
+			if (pid)
 				scanf("%s", command);
 			commangarg[0] = command;
 			commangarg[1] = NULL;
-			
-			printf("%d",pid);
-			execprogram(commangarg,environ);
+			execprogram(commangarg, environ);
 			init_shell();
 		}
 	}
 	else
 	{
-		printf("%s",argv[0]);
 		commangarg[0] = argv[1];
 		commangarg[1] = "-l";
-		commangarg[2]=".";
+		commangarg[2] = ".";
 		if (execve(commangarg[0], commangarg, environ) == -1)
-				printf("%s: No such file or directory\n",commangarg[0]);
+			printf("%s: No such file or directory\n", commangarg[0]);
 	}
 	return (0);
 }
