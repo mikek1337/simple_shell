@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 /**
  * init_shell - starts the shell
  */
@@ -16,9 +17,11 @@ void init_shell(void)
 
 void execprogram(char **commandarg, char **environ)
 {
-
 	if (execve(commandarg[0], commandarg, environ) == -1)
-		printf("%s: No such file or directory\n", commangarg[0]);
+	{
+		printf("%s: No such file or directory\n", commandarg[0]);
+		init_shell();
+	}
 }
 
 /**
@@ -38,13 +41,19 @@ int main(int argc, char *argv[])
 	{
 		while (1)
 		{
+			scanf("%s", command);
 			pid = fork();
-			if (pid)
-				scanf("%s", command);
 			commangarg[0] = command;
 			commangarg[1] = NULL;
-			execprogram(commangarg, environ);
-			init_shell();
+			if (pid == 0)
+			{
+				execprogram(commangarg, environ);
+			}
+			else
+			{
+				wait(NULL);
+				init_shell();
+			}
 		}
 	}
 	else
