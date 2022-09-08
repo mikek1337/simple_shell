@@ -9,6 +9,28 @@ void init_shell(void)
 {
 	printf("#cisfun$ ");
 }
+
+/**
+ * stripnewline - removes new line character
+ * @cmd: char pointer
+ * @tchar: long int
+ * Return: char pointer
+ */
+
+char *stripnewline(char *cmd, size_t tchar)
+{
+	 int i = 0;
+	 char *command = malloc(sizeof(char) * tchar);
+	while (*cmd != '\n')
+	{
+		command[i] = *cmd;
+		i++;
+		cmd++;
+	}
+	return (command);
+}
+
+
 /**
  * execprogram - execute programs given path
  * @commandarg: command to run with args
@@ -34,6 +56,8 @@ int main(int argc, char *argv[])
 {
 	 char *commangarg[10];
 	 pid_t pid;
+	 size_t read;
+	 size_t size = 100;
 	 char *command = malloc(sizeof(char) * 100);
 	 char *environ[10] = { NULL };
 	init_shell();
@@ -41,7 +65,8 @@ int main(int argc, char *argv[])
 	{
 		while (1)
 		{
-			scanf("%s", command);
+			read = getline(&command, &size, stdin);
+			command = stripEOF(command, read);
 			pid = fork();
 			commangarg[0] = command;
 			commangarg[1] = NULL;
